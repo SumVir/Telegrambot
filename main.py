@@ -8,13 +8,13 @@ BOT_USERNAME: Final='@H4c6erbot'
 
 # Commands
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text('Salam, Mən kibertəhlükəsizlik üzrə sənə məsləhətlər vermək üçün burdayam. :) ')
+    await update.message.reply_text('Salam, Mən kibertəhlükəsizlik üzrə sənə məsləhətlər vermək üçün burdayam. :)  Əmrlər listi: "şifrə", "link"')
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text('Mən bir botam, Danışmaq üçün nə isə yazın zəhmət olmasa.')
 
 async def custom_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text('Bu bir Custom commanddir')
+    await update.message.reply_text('Bu bir Custom əmrdir')
 
 
 
@@ -23,19 +23,25 @@ async def custom_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def handle_response(text: str) -> str:
     processed: str = text.lower()
 
-    if 'hello' in processed:
-        return 'Salamlar'
+    if 'salam' in processed or 'hello'in processed or 'salam aleykum'in processed or 'hey'in processed:
+        return 'Salamlar, Xoş gördük'
     
-    if 'necəsən' in processed:
+    if 'necəsən''hello' in processed or 'nətərsən' in processed or 'netersen' in processed or 'nəvar nəyox' in processed:
         return 'Yaxşı, Sən?'
     
-    if 'məndə yaxşı' in processed:
-        return 'Əla'
+    if 'məndə yaxşı' in processed or 'yaxşı' in processed or 'orta' in processed or 'super' in processed or 'ela' in processed:
+        return 'Əla, həmişə yaxşı ol'
     
+    if 'pis' in processed or 'pisəm'  in processed or 'belədə' in processed or 'yaxşı deyiləm' in processed:
+        return 'Heç nə olmaz, bir gün hərşey yaxşı olacağ. Bu həyatda çətinlik yaşayan tək sən deyilsən, unutma.'
+
     if 'şifrə' in processed:
-        return 'Güclü şifrə rəqəmsal hesablarınızı və şəxsi məlumatlarınızı qorumaq üçün vacibdir. Bu mürəkkəb və təsadüfi ardıcıllıq təşkil edən hərflərin (həm böyük, həm də kiçik hərf), rəqəmlərin və simvolların birləşməsidir. Şifrənin gücü onun müxtəlif hücum formalarına, məsələn, brute-force cəhdlərinə qarşı durmaq qabiliyyətindədir' 
-                                                         
-    return 'Nə dediyiniz başa düşmürəm.'
+        return 'Güclü şifrə rəqəmsal hesablarınızı və şəxsi məlumatlarınızı qorumaq üçün vacibdir. Bu mürəkkəb və təsadüfi ardıcıllıq təşkil edən hərflərin (həm böyük, həm də kiçik hərf), rəqəmlərin və simvolların birləşməsidir. Şifrənin gücü onun müxtəlif hücum formalarına, məsələn, brute-force cəhdlərinə qarşı durmaq qabiliyyətindədir. Şifrə 8-16 simvol uzunluğunda olmalıdır. Zəif şifrə nümunə: "Elçin1985" . Güclü şifrə nümunə: "Tr@in$&72Blu3"' 
+    
+    if 'link'  in processed or 'linklər' in processed:
+        return 'Onlayn həyatda naviqasiya çoxsaylı linklərlə qarşılaşmağı əhatə edir. Bəziləri dəyərli məlumatlara aparsada bizi, digərləri də fişinq cəhdləri kimi risklər yarada bilər. 1. HTTPS-i yoxlayın. Qanuni veb saytlar təhlükəsiz ünsiyyət üçün HTTPS-dən istifadə edir. Linkin "http://" əvəzinə "https://" ilə başladığından əmin olun. 2. Üzərinə gətirin, Klik etməyin. Təyinat yerinə baxmaq üçün klikləmədən siçanınızı linkin üzərinə gətirin. URL-in gözlənilən mənbə ilə uyğunlaşdığını yoxlayın. 3. Qısaldılmış URL-lərdən çəkinin. Qısaldılmış URL-lər həqiqi təyinatı gizlədə bilər. Klikləmədən əvvəl tam linki aşkar etmək üçün URL genişləndirmə xidmətlərindən istifadə edin.                                                      '
+        
+    return 'Nə dediyinizi başa düşmürəm. Zəhmət olmasa, mənim bildiyim sözlərdən yazın VƏ YA düzgün əmri yazdığınızdan əmin olun. Əmrlər listi üçün "/start" yazın.'
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message_type: str = update.message.chat.type
