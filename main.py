@@ -21,10 +21,10 @@ async def custom_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def handle_response(text: str) -> str:
     processed: str = text.lower()
 
-    if 'salam' in processed or 'hello'in processed or 'salam aleykum'in processed or 'hey'in processed:
+    if 'salam' in processed or 'hello'in processed or 'salam aleykum'in processed or 'hey'in processed or 'hi'in processed:
         return 'Salamlar, Xoş gördük'
     
-    if 'necəsən''hello' in processed or 'nətərsən' in processed or 'netersen' in processed or 'nəvar nəyox' in processed:
+    if 'necəsən' in processed or 'necesen' in processed or 'nətərsən' in processed or 'netersen' in processed or 'nəvar nəyox' in processed:
         return 'Yaxşı, Sən?'
     
     if 'məndə yaxşı' in processed or 'yaxşı' in processed or 'orta' in processed or 'super' in processed or 'ela' in processed:
