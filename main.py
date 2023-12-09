@@ -1,9 +1,7 @@
 from typing import Final
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-
-TOKEN: Final = '6690162796:AAH0rOSHMs7JeloydISzkRcjt847kzgRYoM'
-BOT_USERNAME: Final='@H4c6erbot'
+from config import TELEGRAM_TOKEN, BOT_USERNAME, OWNER_ID
 
 
 # Commands
@@ -32,7 +30,7 @@ def handle_response(text: str) -> str:
     if 'məndə yaxşı' in processed or 'yaxşı' in processed or 'orta' in processed or 'super' in processed or 'ela' in processed:
         return 'Əla, həmişə yaxşı ol'
     
-    if 'pis' in processed or 'pisəm'  in processed or 'belədə' in processed or 'yaxşı deyiləm' in processed:
+    if 'pis' in processed or 'pisəm'  in processed or 'belədə' in processed or 'belede'in processed or 'yaxşı deyiləm' in processed:
         return 'Heç nə olmaz, bir gün hərşey yaxşı olacağ. Bu həyatda çətinlik yaşayan tək sən deyilsən, unutma.'
 
     if 'şifrə' in processed:
@@ -67,7 +65,7 @@ async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 if __name__ == '__main__':
     print('Starting bot... ')
-    app = Application.builder().token(TOKEN).build()
+    app = Application.builder().token(TELEGRAM_TOKEN).build()
 
 
     # Commands
