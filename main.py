@@ -1,7 +1,7 @@
 from typing import Final
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-from config import TELEGRAM_TOKEN, BOT_USERNAME, OWNER_ID
+from config import TELEGRAM_TOKEN, BOT_USERNAME, OWNER_ID, SQLALCHEMY_DATABASE_URI
 
 
 # Commands
