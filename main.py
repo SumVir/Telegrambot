@@ -1,18 +1,36 @@
 from typing import Final
-from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+from telegram import Update,InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes, CallbackQueryHandler
 from config import TELEGRAM_TOKEN, BOT_USERNAME, OWNER_ID, SQLALCHEMY_DATABASE_URI
 
 
 # Commands
+
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text('Salam, Mən kibertəhlükəsizlik üzrə sənə məsləhətlər vermək üçün burdayam. :)  Əmrlər listi: "şifrə", "link"')
+    # Text to be displayed above the list of commands
+    intro_text = f"Xoş gördük, Mən kibertəhlükəsizlik üzrə tövsiyə vermək məqsədilə yaradılmış bir Botam."
+    
+    
+    # Options to be displayed as buttons
+    options = [['Şifrə haqqında'], ['Link haqqında'], ['Əlaqə saxla']]
+
+    # Create a list of InlineKeyboardButton objects
+    keyboard = [[InlineKeyboardButton(text, callback_data=text) for text in row] for row in options]
+
+    # Create an InlineKeyboardMarkup with the list of InlineKeyboardButton objects
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    # Combine the intro text and options
+    full_text = f"{intro_text}\n\n"
+    full_text += "Zəhmət olmasza, Mövzu seçin:"
+
+    await update.message.reply_text(full_text, reply_markup=reply_markup)
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text('Mən bir botam, Danışmaq üçün nə isə yazın zəhmət olmasa.')
+    await update.message.reply_text('/start-a basın\n\nİrad və ya Təklifin var?\nYaradıcıya yaz --> https://t.me/elsenoraccount')
 
 async def custom_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text('Bu bir Custom əmrdir')
+    await update.message.reply_text('Bu əmr gələcəkdə yenilənəcəkdir')
 
 
 
@@ -22,9 +40,12 @@ def handle_response(text: str) -> str:
     processed: str = text.lower()
 
     if 'salam' in processed or 'hello'in processed or 'salam aleykum'in processed or 'hey'in processed or 'hi'in processed:
-        return 'Salamlar, Xoş gördük'
+        return 'Salamlar, Xoş gördük. Bugün necəsiz? '
     
-    if 'necəsən' in processed or 'necesen' in processed or 'nətərsən' in processed or 'netersen' in processed or 'nəvar nəyox' in processed:
+    if 'sən?' in processed or 'sen?' in processed or 'sən' in processed or 'sen' in processed:
+        return 'Mən yaxşıyam :)'
+
+    if 'necəsən' in processed or 'nətərsən' in processed or 'netersen' in processed or 'nəvar nəyox' in processed:
         return 'Yaxşı, Sən?'
     
     if 'məndə yaxşı' in processed or 'yaxşı' in processed or 'orta' in processed or 'super' in processed or 'ela' in processed:
@@ -38,8 +59,25 @@ def handle_response(text: str) -> str:
     
     if 'link'  in processed or 'linklər' in processed:
         return 'Onlayn həyatda naviqasiya çoxsaylı linklərlə qarşılaşmağı əhatə edir. Bəziləri dəyərli məlumatlara aparsada bizi, digərləri də fişinq cəhdləri kimi risklər yarada bilər. 1. HTTPS-i yoxlayın. Qanuni veb saytlar təhlükəsiz ünsiyyət üçün HTTPS-dən istifadə edir. Linkin "http://" əvəzinə "https://" ilə başladığından əmin olun. 2. Üzərinə gətirin, Klik etməyin. Təyinat yerinə baxmaq üçün klikləmədən siçanınızı linkin üzərinə gətirin. URL-in gözlənilən mənbə ilə uyğunlaşdığını yoxlayın. 3. Qısaldılmış URL-lərdən çəkinin. Qısaldılmış URL-lər həqiqi təyinatı gizlədə bilər. Klikləmədən əvvəl tam linki aşkar etmək üçün URL genişləndirmə xidmətlərindən istifadə edin.                                                      '
-        
-    return 'Nə dediyinizi başa düşmürəm. Zəhmət olmasa, mənim bildiyim sözlərdən yazın VƏ YA düzgün əmri yazdığınızdan əmin olun. Əmrlər listi üçün "/start" yazın.'
+    
+    if 'mövzu'  in processed or 'mövzular' in processed or 'start' in processed:
+        return 'Mövzular üçün /start '
+
+    return 'Sizi başa düşmədim, Söz lüğətim kiçikdir. Zəhmət olmazsa /start basın. Və ya /help .'
+
+async def handle_button_click(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    # Handle button click events
+    query = update.callback_query
+    clicked_button = query.data
+
+    if clicked_button == 'Şifrə haqqında':
+        await query.message.reply_text('Güclü şifrə rəqəmsal hesablarınızı və şəxsi məlumatlarınızı qorumaq üçün vacibdir. Bu mürəkkəb və təsadüfi ardıcıllıq təşkil edən hərflərin (həm böyük, həm də kiçik hərf), rəqəmlərin və simvolların birləşməsidir. Şifrənin gücü onun müxtəlif hücum formalarına, məsələn, brute-force cəhdlərinə qarşı durmaq qabiliyyətindədir. Şifrə 8-16 simvol uzunluğunda olmalıdır. Zəif şifrə nümunə: "Elçin1985" . Güclü şifrə nümunə: "Tr@in$&72Blu3"')
+    elif clicked_button == 'Link haqqında':
+        await query.message.reply_text('Onlayn həyatda naviqasiya çoxsaylı linklərlə qarşılaşmağı əhatə edir. Bəziləri dəyərli məlumatlara aparsada bizi, digərləri də fişinq cəhdləri kimi risklər yarada bilər. 1. HTTPS-i yoxlayın. Qanuni veb saytlar təhlükəsiz ünsiyyət üçün HTTPS-dən istifadə edir. Linkin "http://" əvəzinə "https://" ilə başladığından əmin olun. 2. Üzərinə gətirin, Klik etməyin. Təyinat yerinə baxmaq üçün klikləmədən siçanınızı linkin üzərinə gətirin. URL-in gözlənilən mənbə ilə uyğunlaşdığını yoxlayın. 3. Qısaldılmış URL-lərdən çəkinin. Qısaldılmış URL-lər həqiqi təyinatı gizlədə bilər. Klikləmədən əvvəl tam linki aşkar etmək üçün URL genişləndirmə xidmətlərindən istifadə edin. ')
+    elif clicked_button == 'Əlaqə saxla':    
+        await query.message.reply_text(' https://t.me/elsenoraccount')   
+
+
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message_type: str = update.message.chat.type
@@ -62,7 +100,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f'Update {update} caused error {context.error}')
 
-
+     
+   
 if __name__ == '__main__':
     print('Starting bot... ')
     app = Application.builder().token(TELEGRAM_TOKEN).build()
@@ -76,16 +115,16 @@ if __name__ == '__main__':
   
     # Messages
     app.add_handler(MessageHandler(filters.TEXT, handle_message))
-
-    # Errors
     
+    # Buttons
+    app.add_handler(CallbackQueryHandler(handle_button_click))
+    
+    # Errors
     app.add_error_handler(error)
 
     # Polls the bot
     print('Polling...')
     app.run_polling(poll_interval=3)
-
-
 
 
 
